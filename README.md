@@ -228,6 +228,7 @@ SEA Bridge creates **culturally-intelligent, AI-powered learning experiences** t
 2. **Government Education**: Public sector skill development
 3. **NGO Programs**: Community education initiatives
 4. **EdTech Partnerships**: White-label solutions for local providers
+5. **Certificate Verification Using Blockchain**
 
 
 ### **Social Impact**
