@@ -104,7 +104,6 @@ export function ARVRLearning() {
 
   const filteredExperiences = experiences.filter((exp) => {
     // Filter by cultural relevance
-
     const culturalMatch = profile?.country ? exp.culturalSite.toLowerCase().includes(profile.country.toLowerCase()) : false
     return culturalMatch || exp.type === "VR" // VR experiences are universal
   })

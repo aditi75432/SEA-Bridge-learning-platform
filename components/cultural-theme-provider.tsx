@@ -277,8 +277,8 @@ const culturalThemes: Record<string, CulturalTheme> = {
       honorifics: ["than", "ai", "nong", "pho", "mae"],
     },
   },
-  my: {
-    countryCode: "my",
+  mm: {
+    countryCode: "mm",
     colors: {
       primary: "#0092CE", // Blue from flag
       secondary: "#FFFFFF", // White from flag
@@ -305,8 +305,7 @@ const culturalThemes: Record<string, CulturalTheme> = {
       default: "respectful",
       honorifics: ["encik", "puan", "tuan", "cik", "datuk"],
     },
-  },
-  tl: {
+  },  tl: {
     countryCode: "tl",
     colors: {
       primary: "#002776", // Blue from flag
@@ -414,11 +413,10 @@ export function CulturalThemeProvider({ children }: { children: React.ReactNode 
       }
     } else {
       // Map language code to country code
-      const countryCode = languageToCountryMap[currentLanguage.code] || profile.country.toLowerCase() || "en"
+      const countryCode = languageToCountryMap[currentLanguage.code] || (profile?.country?.toLowerCase() ?? "en")
       applyTheme(countryCode)
     }
-  }, [currentLanguage.code, profile.country])
-
+  }, [currentLanguage.code, profile?.country])
   return (
     <CulturalThemeContext.Provider value={{ theme, applyTheme, isLoading }}>{children}</CulturalThemeContext.Provider>
   )

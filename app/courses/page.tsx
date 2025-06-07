@@ -210,7 +210,6 @@ export default function CourseDashboardPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {recommendedCourses.map((course, index) => (
                 <div key={course.id} className="animate-fade-in" style={{ animationDelay: `${0.1 + index * 0.05}s` }}>
-
                   <CourseCard course={{
                     ...course,
                     difficulty: course.difficulty as "Beginner" | "Intermediate" | "Advanced" | undefined

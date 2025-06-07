@@ -29,7 +29,7 @@ export function CulturalLearningModule({
   className = "",
 }: CulturalLearningModuleProps) {
   const { currentLanguage } = useLanguage()
-  const { profile, getCulturalGreeting } = useCulturalContext()
+  const { profile } = useCulturalContext()
   const { theme } = useCulturalTheme()
   const [greeting, setGreeting] = useState("")
   const [example, setExample] = useState("")
@@ -37,8 +37,9 @@ export function CulturalLearningModule({
   const [adaptedImageUrl, setAdaptedImageUrl] = useState(imageUrl)
 
   useEffect(() => {
-    setGreeting(getCulturalGreeting())
-  }, [getCulturalGreeting])
+    // Remove the greeting generation since getCulturalGreeting is not available
+    setGreeting("Welcome!")
+  }, [])
 
   const handleExampleGenerated = (content: string) => {
     setExample(content)
@@ -50,6 +51,10 @@ export function CulturalLearningModule({
 
   const handleImageAdapted = (url: string) => {
     setAdaptedImageUrl(url)
+  }
+
+  if (!profile) {
+    return null
   }
 
   return (
@@ -192,7 +197,7 @@ export function CulturalLearningModule({
           }}
         >
           <div className="text-sm text-gray-500">
-            Culturally adapted for {profile.country} • {profile.region} region • {profile.ageGroup} learners
+            Culturally adapted for {profile.country} • {profile.region} region
           </div>
           <Button
             variant="outline"
@@ -207,4 +212,5 @@ export function CulturalLearningModule({
       </Card>
     </div>
   )
+
 }
