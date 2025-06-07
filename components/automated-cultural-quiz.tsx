@@ -493,23 +493,23 @@ export function AutomatedCulturalQuiz({ subject, culturalProfile, onComplete }: 
       }
     } else {
       // Handle MCQ
-      const correct = selectedAnswer === currentQuestion.correct_answer
+      const mcqQuestion = currentQuestion as { correct_answer: string; feedback: { correct: string; incorrect: string } }
+      const correct = selectedAnswer === mcqQuestion.correct_answer
       setIsCorrect(correct)
 
       if (correct) {
         setScore(score + 1)
         setStreak(streak + 1)
         setMaxStreak(Math.max(maxStreak, streak + 1))
-        setFeedback(currentQuestion.feedback.correct)
+        setFeedback(mcqQuestion.feedback.correct)
       } else {
         setStreak(0)
-        setFeedback(currentQuestion.feedback.incorrect)
+        setFeedback(mcqQuestion.feedback.incorrect)
       }
     }
 
     setShowFeedback(true)
   }
-
   const handleNextQuestion = () => {
     if (isShortAnswerPhase) {
       setQuizCompleted(true)

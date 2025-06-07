@@ -14,8 +14,8 @@ export async function GET(request: NextRequest) {
     const includeRegional = searchParams.get("includeRegional") === "true"
 
     // Get user's learning analytics
-    const userAnalytics = await cosmosService.getLearningAnalytics(session.user.id!, timeRange)
-    const userProfile = await cosmosService.getUser(session.user.id!)
+    const userAnalytics = await cosmosService.getLearningAnalytics(session.user.email, timeRange)
+    const userProfile = await cosmosService.getUser(session.user.email)
 
     if (!userProfile) {
       return NextResponse.json({ error: "User profile not found" }, { status: 404 })
@@ -23,27 +23,17 @@ export async function GET(request: NextRequest) {
 
     // Process analytics data
     const insights = await processLearningInsights(userAnalytics, userProfile)
-
-    // Get regional analytics if requested
-    let regionalInsights = null
-    if (includeRegional) {
-      regionalInsights = await cosmosService.getRegionalAnalytics(userProfile.country, userProfile.preferredLanguage)
-    }
-
     return NextResponse.json({
       personalInsights: insights,
-      regionalInsights,
+      regionalInsights: null,
       recommendations: await generatePersonalizedRecommendations(insights, userProfile),
     })
   } catch (error) {
     console.error("Analytics error:", error)
     return NextResponse.json({ error: "Failed to generate insights" }, { status: 500 })
   }
-}
 
-async function processLearningInsights(analytics: any[], userProfile: any) {
-  const insights = {
-    totalSessions: analytics.length,
+}async function processLearningInsights(analytics: any[], userProfile: any) {  const insights = {    totalSessions: analytics.length,
     totalTimeSpent: analytics.reduce((sum, event) => sum + (event.timeSpent || 0), 0),
     averageScore: 0,
     strongSubjects: [] as string[],
@@ -180,8 +170,7 @@ async function generatePersonalizedRecommendations(insights: any, userProfile: a
       priority: "medium",
       title: "Strengthen Weak Areas",
       description: `Focus on: ${insights.weakSubjects.join(", ")}`,
-      actions: insights.weakSubjects.map((subject) => `Practice ${subject} with ${userProfile.country} examples`),
-    })
+      actions: insights.weakSubjects.map((subject: string) => `Practice ${subject} with ${userProfile.country} examples`),    })
   }
 
   // Consistency recommendations
@@ -229,7 +218,7 @@ export async function POST(request: NextRequest) {
 
     // Track real-time learning event
     await cosmosService.trackLearningEvent({
-      userId: session.user.id,
+      userId: session.user.email, // Changed from id to email since that's what's available
       eventType,
       timestamp: new Date().toISOString(),
       ...eventData,

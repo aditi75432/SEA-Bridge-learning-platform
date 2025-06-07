@@ -99,7 +99,7 @@ class MockCosmosService {
     return event
   }
 
-  async getLearningAnalytics(userId: string) {
+  async getLearningAnalytics(userId: string, timeRange: string) {
     return this.analytics.filter((a) => a.userId === userId)
   }
 

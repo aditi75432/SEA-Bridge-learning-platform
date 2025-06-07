@@ -7,19 +7,19 @@ export async function GET() {
   try {
     const session = await getServerSession(authOptions)
 
-    if (!session?.user?.id) {
+    if (!session?.user?.email) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
     // Get user profile from Cosmos DB
-    const userProfile = await cosmosService.getUser(session.user.id)
+    const userProfile = await cosmosService.getUser(session.user.email)
 
     if (!userProfile) {
       return NextResponse.json({ error: "User not found" }, { status: 404 })
     }
 
     // Get learning profile
-    const learningProfile = await cosmosService.getLearningProfile(session.user.id)
+    const learningProfile = await cosmosService.getLearningProfile(session.user.email)
 
     // Remove sensitive information
     const { password, ...safeUserProfile } = userProfile
@@ -33,19 +33,18 @@ export async function GET() {
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
-
 export async function PUT(request: Request) {
   try {
     const session = await getServerSession(authOptions)
 
-    if (!session?.user?.id) {
+    if (!session?.user?.email) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
     const updates = await request.json()
 
     // Update user profile
-    const updatedProfile = await cosmosService.updateUser(session.user.id, updates)
+    const updatedProfile = await cosmosService.updateUser(session.user.email, updates)
 
     return NextResponse.json({
       success: true,

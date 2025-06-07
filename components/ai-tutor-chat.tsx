@@ -31,7 +31,7 @@ interface AITutorChatProps {
 
 export function AITutorChat({ isOpen, onClose, courseContext }: AITutorChatProps) {
   const { currentLanguage } = useLanguage()
-  const { getCulturalGreeting, profile } = useCulturalContext()
+  const { culturalGreeting, profile } = useCulturalContext()
   const { translateText } = useAzureTranslate()
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState("")
@@ -64,7 +64,7 @@ export function AITutorChat({ isOpen, onClose, courseContext }: AITutorChatProps
   }
 
   const initializeChat = async () => {
-    const greeting = getCulturalGreeting()
+    const greeting = culturalGreeting
     let welcomeMessage = `${greeting}! I'm your AI tutor. I'm here to help you learn and answer any questions you have.`
 
     if (courseContext) {

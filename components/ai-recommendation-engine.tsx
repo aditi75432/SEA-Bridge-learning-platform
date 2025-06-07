@@ -69,12 +69,12 @@ export function AIRecommendationEngine() {
         type: "course",
         title: "AI in Southeast Asian Agriculture",
         description: "Learn how artificial intelligence is revolutionizing farming practices in your region",
-        reason: `Perfect for your interest in technology and ${profile.country} cultural context`,
+        reason: `Perfect for your interest in technology and ${profile?.country} cultural context`,
         culturalRelevance: 0.95,
         difficulty: "Intermediate",
         estimatedTime: "45 min",
         priority: "high",
-        tags: ["AI", "Agriculture", "Technology", profile.country],
+        tags: ["AI", "Agriculture", "Technology", profile?.country ?? "Southeast Asia"],
         thumbnail: "🤖🌾",
       },
       {
@@ -133,8 +133,7 @@ export function AIRecommendationEngine() {
 
     setRecommendations(newRecommendations)
     setIsGenerating(false)
-  }, [profile.country])
-
+  }, [profile?.country])
   useEffect(() => {
     generateRecommendations()
   }, [generateRecommendations])

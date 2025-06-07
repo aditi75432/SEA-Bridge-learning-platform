@@ -13,8 +13,8 @@ export async function POST(request: NextRequest) {
     const { userAnswer, correctAnswer, questionId, subject, concept, attemptNumber = 1 } = await request.json()
 
     // Get user profile
-    const userProfile = await cosmosService.getUser(session.user.id!)
-    const learningProfile = await cosmosService.getLearningProfile(session.user.id!)
+    const userProfile = await cosmosService.getUser(session.user.email)
+    const learningProfile = await cosmosService.getLearningProfile(session.user.email)
 
     if (!userProfile) {
       return NextResponse.json({ error: "User profile not found" }, { status: 404 })
@@ -32,10 +32,6 @@ export async function POST(request: NextRequest) {
       },
     }
 
-    // Analyze user answer sentiment and key phrases
-    const sentiment = await azureLanguage.analyzeSentiment(userAnswer, userProfile.preferredLanguage)
-    const keyPhrases = await azureLanguage.extractKeyPhrases(userAnswer, userProfile.preferredLanguage)
-
     // Calculate semantic similarity (simplified)
     const similarity = calculateSimilarity(userAnswer, correctAnswer)
     const isCorrect = similarity > 0.8
@@ -52,7 +48,7 @@ export async function POST(request: NextRequest) {
 
     // Create feedback object
     const feedbackData = {
-      userId: session.user.id,
+      userId: session.user.email,
       questionId,
       userAnswer,
       correctAnswer,
@@ -61,8 +57,8 @@ export async function POST(request: NextRequest) {
       similarity,
       feedback,
       adaptiveHint,
-      sentiment: sentiment?.sentiment || "neutral",
-      keyPhrases,
+      sentiment: "neutral",
+      keyPhrases: [],
       attemptNumber,
       subject,
       concept,
@@ -75,7 +71,7 @@ export async function POST(request: NextRequest) {
 
     // Track learning analytics
     await cosmosService.trackLearningEvent({
-      userId: session.user.id,
+      userId: session.user.email,
       eventType: "answer_submitted",
       questionId,
       score: isCorrect ? 100 : isPartiallyCorrect ? 50 : 0,
@@ -84,20 +80,20 @@ export async function POST(request: NextRequest) {
       metadata: {
         similarity,
         attemptNumber,
-        sentiment: sentiment?.sentiment,
-        keyPhrases,
+        sentiment: "neutral",
+        keyPhrases: [],
       },
     })
 
     // Update learning profile based on performance
     if (learningProfile) {
-      await updateLearningProfile(session.user.id!, learningProfile, subject, concept, isCorrect, similarity)
+      await updateLearningProfile(session.user.email, learningProfile, subject, concept, isCorrect, similarity)
     }
 
     return NextResponse.json({
       feedback: feedbackData,
       recommendations: await generateLearningRecommendations(
-        session.user.id!,
+        session.user.email,
         subject,
         concept,
         isCorrect,
@@ -108,9 +104,7 @@ export async function POST(request: NextRequest) {
     console.error("Feedback generation error:", error)
     return NextResponse.json({ error: "Failed to generate feedback" }, { status: 500 })
   }
-}
-
-// Helper functions
+}// Helper functions
 function calculateSimilarity(answer: string, correct: string): number {
   const normalize = (text: string) =>
     text
@@ -152,14 +146,10 @@ async function generateAdaptiveHint(
     Be more specific with each attempt but still encouraging.
   `
 
-  const response = await azureOpenAI.client.getChatCompletions("gpt-4", [{ role: "user", content: hintPrompt }], {
-    maxTokens: 200,
-    temperature: 0.7,
-  })
+  const response = await azureOpenAI.generatePersonalizedFeedback(userAnswer, correctAnswer, culturalContext)
 
-  return response.choices[0]?.message?.content || ""
+  return response?.content || ""
 }
-
 async function updateLearningProfile(
   userId: string,
   currentProfile: any,

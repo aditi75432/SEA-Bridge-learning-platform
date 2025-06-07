@@ -68,8 +68,8 @@ export default function CulturalDemoPage() {
                 <Badge variant="outline">
                   Current Language: {currentLanguage.name} ({currentLanguage.localName})
                 </Badge>
-                <Badge variant="outline">Cultural Context: {profile.country}</Badge>
-                <Badge variant="outline">Region: {profile.region}</Badge>
+                <Badge variant="outline">Cultural Context: {profile?.country}</Badge>
+                <Badge variant="outline">Region: {profile?.region}</Badge>
               </div>
             </div>
 

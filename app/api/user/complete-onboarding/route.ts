@@ -7,7 +7,8 @@ export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
 
-    if (!session?.user?.id) {
+
+    if (!session?.user || !('id' in session.user) || typeof session.user.id !== 'string') {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
@@ -25,8 +26,8 @@ export async function POST(request: NextRequest) {
       onboardingCompletedAt: new Date().toISOString(),
     })
 
-    // Update learning profile
-    await cosmosService.updateLearningProfile(session.user.id, {
+    // Create learning profile
+    await cosmosService.createLearningProfile(session.user.id, {
       culturalContext: {
         ...onboardingData.culturalPreferences,
         region: onboardingData.region,

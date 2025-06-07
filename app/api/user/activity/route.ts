@@ -7,12 +7,12 @@ export async function POST() {
   try {
     const session = await getServerSession(authOptions)
 
-    if (!session?.user?.id) {
+    if (!session?.user?.email) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
     // Update last active timestamp
-    await cosmosService.updateUser(session.user.id, {
+    await cosmosService.updateUser(session.user.email, {
       lastActive: new Date().toISOString(),
     })
 

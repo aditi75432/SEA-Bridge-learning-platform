@@ -212,5 +212,4 @@ export function CulturalLearningModule({
       </Card>
     </div>
   )
-
 }

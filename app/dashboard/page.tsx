@@ -149,7 +149,7 @@ export default function DashboardPage() {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <Avatar className="h-16 w-16 border-4 border-white shadow-lg">
-                <AvatarImage src={user?.avatar || "/placeholder.svg"} alt={user?.name} />
+                <AvatarImage src={user?.photoURL || "/logo.png"} alt={user?.name} />
                 <AvatarFallback className="text-lg bg-gradient-to-r from-blue-500 to-teal-400 text-white">
                   {user?.name?.charAt(0)}
                 </AvatarFallback>

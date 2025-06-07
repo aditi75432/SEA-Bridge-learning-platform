@@ -13,8 +13,8 @@ export async function POST(request: NextRequest) {
     const { contentId, originalContent, contentType } = await request.json()
 
     // Get user profile and cultural context
-    const userProfile = await cosmosService.getUser(session.user.id!)
-    const learningProfile = await cosmosService.getLearningProfile(session.user.id!)
+    const userProfile = await cosmosService.getUser(session.user.email)
+    const learningProfile = await cosmosService.getLearningProfile(session.user.email)
 
     if (!userProfile || !learningProfile) {
       return NextResponse.json({ error: "User profile not found" }, { status: 404 })
@@ -54,10 +54,10 @@ export async function POST(request: NextRequest) {
 
       // Translate if needed
       if (userProfile.preferredLanguage !== "en") {
-        localizedContent.text = await azureTranslator.translateWithTone(
+        localizedContent.text = await azureTranslator.translateText(
           adaptedText,
-          userProfile.preferredLanguage,
-          userProfile.formalityPreference,
+          "en",
+          userProfile.preferredLanguage
         )
       } else {
         localizedContent.text = adaptedText
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
 
     // Generate micro-narrative
     if (originalContent.topic) {
-      localizedContent.microNarrative = await azureOpenAI.generateMicroNarrative(originalContent.topic, culturalContext)
+      localizedContent.microNarrative = await azureOpenAI.generateCulturalContent(originalContent.topic, culturalContext)
     }
 
     // Adapt images using Azure Vision
@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
 
     // Track analytics
     await cosmosService.trackLearningEvent({
-      userId: session.user.id,
+      userId: session.user.email,
       eventType: "content_localized",
       contentId,
       language: userProfile.preferredLanguage,
@@ -127,10 +127,7 @@ export async function POST(request: NextRequest) {
     console.error("Content adaptation error:", error)
     return NextResponse.json({ error: "Failed to adapt content" }, { status: 500 })
   }
-}
-
-// Helper functions
-function getCulturalElements(country: string, type: string): string[] {
+}function getCulturalElements(country: string, type: string): string[] {
   const elements: Record<string, Record<string, string[]>> = {
     Philippines: {
       foods: ["adobo", "lumpia", "halo-halo", "lechon", "sinigang"],
