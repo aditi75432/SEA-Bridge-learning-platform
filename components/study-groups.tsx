@@ -186,7 +186,8 @@ export function StudyGroups() {
             <div className="flex gap-2">
               <Badge variant="outline" className="border-primary/20 text-primary">
                 <Globe className="h-3 w-3 mr-1" />
-                {profile.country}
+
+                {profile?.country || "Global"}
               </Badge>
               <Badge variant="outline" className="border-secondary/20 text-secondary">
                 {currentLanguage.localName}

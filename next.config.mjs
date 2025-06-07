@@ -24,9 +24,7 @@ const nextConfig = {
     unoptimized: true,
   },
   output: 'standalone', // 🧠 Add this to avoid static export errors
-  experimental: {
-    serverActions: true, // Optional but helpful for newer Next features
-  },
+  
 }
 
 export default nextConfig

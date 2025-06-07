@@ -16,7 +16,7 @@ export function Sidebar() {
     { href: "/", icon: Home, label: t("sidebar.home") },
     { href: "/courses", icon: BookOpen, label: t("sidebar.courses") },
     { href: "/explore", icon: Compass, label: t("sidebar.explore") },
-    { href: "/settings", icon: Settings, label: t("sidebar.settings") },
+    // { href: "/settings", icon: Settings, label: t("sidebar.settings") },
   ]
 
   return (
