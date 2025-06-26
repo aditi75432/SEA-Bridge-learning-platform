@@ -8,6 +8,12 @@
 ## 🎯 Overview
 SEA Bridge revolutionizes education across Southeast Asia by providing AI-powered, culturally adaptive and localized learning experiences. This platform doesn't just translate content—it transforms it to match local customs, examples, and learning preferences across 12+ SEA languages.
 
+## 🏆 Awards
+Second Prize Winner - Microsoft Code; Without Barriers 2025 Hackathon 
+<br>
+HEX Problem Statement: "AI-Powered Localization for Engaging Asynchronous Learning Experiences in Southeast Asia (SEA)"
+
+
 ## ✨ Key Features
 
 ### 🌍 **Multi-Language Support**
