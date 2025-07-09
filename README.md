@@ -13,6 +13,9 @@ Second Prize Winner - Microsoft Code; Without Barriers 2025 Hackathon
 <br>
 HEX Problem Statement: "AI-Powered Localization for Engaging Asynchronous Learning Experiences in Southeast Asia (SEA)"
 
+## Demo
+https://www.youtube.com/watch?v=3eIw0H75aec
+
 
 ## ✨ Key Features
 
